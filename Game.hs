@@ -17,7 +17,7 @@ import Data.Maybe
 type Tile = Maybe Int
 type RowCol = [Tile]
 type Board = [[Tile]]
-type Coordinate
+type Coordinate = (Int, Int)
 type StartingPos = ((Coordinate, Int), (Coordinate, Int))
 coordToTile :: StartingPos -> Coordinate -> Tile
 coordToTile (((ax, ay), av), ((bx, by), bv)) (x, y) | x == ax && y == ay = Just av
@@ -38,7 +38,7 @@ checkJump Nothing Nothing = 1
 checkJump Nothing _ = 1
 checkJump _ Nothing = 0
 checkJump (Just a) (Just b) = if a < b then 1 else 0
-jumpScore :: RowCol -> Int --High Score is good
+jumpScore :: RowCol -> Int --High jumpScore is good
 jumpScore r = sum $ map (uncurry checkJump) $ groupBy2 r
 monotonicity :: Board -> Int --High Monotonicity is good
 monotonicity b = (sum $ map jumpScore b) + (sum $ map (jumpScore.reverse) $ transpose b)
@@ -74,3 +74,4 @@ add t b = map (insert t b) $ empties b
 win, lose :: Board -> Bool
 win b = any $ map any $ map (map (==(Just 2048))) b
 lose b = all $ map (==b) $ zipWith ($) [left, right, up, down] $ repeat b
+
